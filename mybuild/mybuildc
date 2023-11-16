@@ -1,0 +1,58 @@
+{
+	verbose : true
+	value : {
+
+	}
+	compile_flag : [ -Os -fno-strict-aliasing -fno-tree-loop-distribute-patterns
+		-fno-stack-protector -fshort-wchar -Wall -fpic
+	]
+	exe : {
+		helicopter.efi : {
+			option : [ ]
+			obj : [ $LIBEG $MOK $GZIP $EFILIB $LOADER $FS $MAIN ]
+			lib : [ gnuefi ]
+			libpath : [ ]
+		}
+	}
+	obj : {
+		LIBEG : { src : [ basedir : ../libeg
+			]
+			include : [ ]
+		}
+	//	MOK : { src : [ basedir : ../mok
+	//		]
+	//		include : [ ]
+	//	}
+		GZIP : { src : [ basedir : ../gzip
+			]
+			include : [ ]
+		}
+		EFILIB : { src : [ basedir : ../EfiLib
+			]
+			include : [ ]
+		}
+		LOADER : { basedir : ../refind
+			src : [
+			]
+			include : [ ]
+		}
+		FS : { basedir : ../filesystems
+			src : [
+				fsw_core.c
+				fsw_efi.c
+				fsw_efi_lib.c
+				fsw_lib.c
+				fsw_ext4.c
+				fsw_ntfs.c
+			]
+			include : [ . ]
+		}
+		MAIN : {
+			basedir : ..
+			src : [ main.c ]
+		}
+	}
+
+	compiler : gcc
+
+}
