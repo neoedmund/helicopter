@@ -65,13 +65,13 @@
 #define FSTYPE ext2
 #endif
 
-EFI_GUID gMyEfiDriverBindingProtocolGuid = REFIND_EFI_DRIVER_BINDING_PROTOCOL_GUID;
-EFI_GUID gMyEfiComponentNameProtocolGuid = REFIND_EFI_COMPONENT_NAME_PROTOCOL_GUID;
-EFI_GUID gMyEfiDiskIoProtocolGuid = REFIND_EFI_DISK_IO_PROTOCOL_GUID;
-EFI_GUID gMyEfiBlockIoProtocolGuid = REFIND_EFI_BLOCK_IO_PROTOCOL_GUID;
-EFI_GUID gMyEfiFileInfoGuid = EFI_FILE_INFO_ID;
-EFI_GUID gMyEfiFileSystemInfoGuid = EFI_FILE_SYSTEM_INFO_ID;
-EFI_GUID gMyEfiFileSystemVolumeLabelInfoIdGuid = EFI_FILE_SYSTEM_VOLUME_LABEL_INFO_ID;
+extern EFI_GUID gMyEfiDriverBindingProtocolGuid ;//= REFIND_EFI_DRIVER_BINDING_PROTOCOL_GUID;
+extern EFI_GUID gMyEfiComponentNameProtocolGuid ;//= REFIND_EFI_COMPONENT_NAME_PROTOCOL_GUID;
+extern EFI_GUID gMyEfiDiskIoProtocolGuid ;//= REFIND_EFI_DISK_IO_PROTOCOL_GUID;
+extern EFI_GUID gMyEfiBlockIoProtocolGuid ;//= REFIND_EFI_BLOCK_IO_PROTOCOL_GUID;
+  EFI_GUID gMyEfiFileInfoGuid = EFI_FILE_INFO_ID;
+  EFI_GUID gMyEfiFileSystemInfoGuid  = EFI_FILE_SYSTEM_INFO_ID;
+  EFI_GUID gMyEfiFileSystemVolumeLabelInfoIdGuid  = EFI_FILE_SYSTEM_VOLUME_LABEL_INFO_ID;
 
 /** Helper macro for stringification. */
 #define FSW_EFI_STRINGIFY(x) #x

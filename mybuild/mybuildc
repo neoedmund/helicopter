@@ -1,14 +1,17 @@
 {
 	verbose : true
-	value : {}
+	value : { }
 	baseDir : ..
 	compile_flag : [ -I/usr/include/efi/ -D__MAKEWITH_GNUEFI
+		-fno-stack-protector -fpic
+		-fshort-wchar -mno-red-zone -Wall
 		-Os -fno-strict-aliasing -fno-tree-loop-distribute-patterns
-		-fno-stack-protector -fshort-wchar -Wall -fpic
 	]
 	exe : {
-		helicopter.efi : {
-			option : [ -lefi -lgnuefi -T /usr/lib/elf_x86_64_efi.lds -shared -Bsymbolic -nostdlib ]
+		helicopter.so : {
+			option : [ -lefi -lgnuefi -T /usr/lib/elf_x86_64_efi.lds
+				-shared -Bsymbolic -nostdlib -znocombreloc /usr/lib/crt0-efi-x86_64.o
+				-DEFI_FUNCTION_WRAPPER ]
 			obj : [ $LIBEG $GZIP $EFILIB $LOADER $FS
 				// /usr/lib/crt0-efi-x86_64.o
 				// /usr/lib/libgnuefi.a
@@ -16,16 +19,15 @@
 			]
 			lib : [ ]
 			libpath : [ ]
-		}
-		helicopter.so : {
-			option : [ -nostdlib ]
-			obj : [ $LIBEG $GZIP $EFILIB $LOADER $FS
-				/usr/lib/crt0-efi-x86_64.o
-				/usr/lib/libgnuefi.a
-				/usr/lib/libefi.a
+			post_exec : [
+				// [ /opt/github/neoedmund/helicopter/_buildc ] objcopy -j .text -j .sdata -j .data -j .dynamic -j .dynsym -j .rel -j .rela -j .reloc --target=efi-app-x86_64 helicopter.so helicopter.efi
+				// [ /opt/github/neoedmund/helicopter ] ld -o _buildc/helicopter.so _buildc/libeg$nanojpeg_c.o _buildc/libeg$nanojpeg_xtra_c.o _buildc/libeg$screen_c.o _buildc/libeg$image_c.o _buildc/libeg$text_c.o _buildc/libeg$load_bmp_c.o _buildc/libeg$load_icns_c.o _buildc/libeg$lodepng_c.o _buildc/libeg$lodepng_xtra_c.o _buildc/gzip$decompress_inflate_c.o _buildc/EfiLib$gnuefi-helper_c.o _buildc/EfiLib$legacy_c.o _buildc/EfiLib$BdsHelper_c.o _buildc/EfiLib$BdsTianoCore_c.o _buildc/refind$apple_c.o _buildc/refind$config_c.o _buildc/refind$crc32_c.o _buildc/refind$driver_support_c.o _buildc/refind$gpt_c.o _buildc/refind$icns_c.o _buildc/refind$install_c.o _buildc/refind$launch_efi_c.o _buildc/refind$launch_legacy_c.o _buildc/refind$lib_c.o _buildc/refind$line_edit_c.o _buildc/refind$linux_c.o _buildc/refind$log_c.o _buildc/refind$main_c.o _buildc/refind$menu_c.o _buildc/refind$mystrings_c.o _buildc/refind$pointer_c.o _buildc/refind$scan_c.o _buildc/refind$screen_c.o _buildc/filesystems$fsw_core_c.o _buildc/filesystems$fsw_efi_c.o _buildc/filesystems$fsw_efi_lib_c.o _buildc/filesystems$fsw_lib_c.o _buildc/filesystems$fsw_ext4_c.o _buildc/filesystems$fsw_ext2_c.o _buildc/filesystems$fsw_ntfs_c.o -T /usr/lib/elf_x86_64_efi.lds -shared -Bsymbolic -nostdlib -znocombreloc /usr/lib/crt0-efi-x86_64.o -L /usr/lib/ -lefi -lgnuefi
+
+				'
+objcopy -j .text -j .sdata -j .data -j .dynamic -j .dynsym -j .rel -j .rela -j .reloc --target=efi-app-x86_64 helicopter.so  helicopter.efi
+'
+
 			]
-			lib : [ ]
-			libpath : [ ]
 		}
 	}
 	obj : {
