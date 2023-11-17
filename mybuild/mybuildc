@@ -1,55 +1,69 @@
 {
 	verbose : true
-	value : {
-
-	}
-	compile_flag : [ -Os -fno-strict-aliasing -fno-tree-loop-distribute-patterns
+	value : {}
+	baseDir : ..
+	compile_flag : [ -I/usr/include/efi/ -D__MAKEWITH_GNUEFI
+		-Os -fno-strict-aliasing -fno-tree-loop-distribute-patterns
 		-fno-stack-protector -fshort-wchar -Wall -fpic
 	]
 	exe : {
 		helicopter.efi : {
-			option : [ ]
-			obj : [ $LIBEG $MOK $GZIP $EFILIB $LOADER $FS $MAIN ]
-			lib : [ gnuefi ]
+			option : [ -lefi -lgnuefi -T /usr/lib/elf_x86_64_efi.lds -shared -Bsymbolic -nostdlib ]
+			obj : [ $LIBEG $GZIP $EFILIB $LOADER $FS
+				// /usr/lib/crt0-efi-x86_64.o
+				// /usr/lib/libgnuefi.a
+				// /usr/lib/libefi.a
+			]
+			lib : [ ]
+			libpath : [ ]
+		}
+		helicopter.so : {
+			option : [ -nostdlib ]
+			obj : [ $LIBEG $GZIP $EFILIB $LOADER $FS
+				/usr/lib/crt0-efi-x86_64.o
+				/usr/lib/libgnuefi.a
+				/usr/lib/libefi.a
+			]
+			lib : [ ]
 			libpath : [ ]
 		}
 	}
 	obj : {
-		LIBEG : { src : [ basedir : ../libeg
-			]
-			include : [ ]
+		LIBEG : { basedir : libeg
+			src : [ nanojpeg.c nanojpeg_xtra.c screen.c image.c text.c load_bmp.c load_icns.c lodepng.c lodepng_xtra.c ]
+			include : [ libeg refind ]
 		}
-	//	MOK : { src : [ basedir : ../mok
-	//		]
-	//		include : [ ]
-	//	}
-		GZIP : { src : [ basedir : ../gzip
-			]
-			include : [ ]
+		MOK : { basedir : mok
+			src : [ guid.c mok.c security_policy.c simple_file.c ]
+			include : [ libeg mok refind ]
 		}
-		EFILIB : { src : [ basedir : ../EfiLib
-			]
-			include : [ ]
+		GZIP : { basedir : gzip
+			src : [ decompress_inflate.c ]
+			include : [ libeg ]
 		}
-		LOADER : { basedir : ../refind
+		EFILIB : { basedir : EfiLib
+			src : [ gnuefi-helper.c legacy.c BdsHelper.c BdsTianoCore.c ]
+			include : [ libeg refind include ]
+		}
+		LOADER : { basedir : refind
 			src : [
+				apple.c config.c crc32.c driver_support.c gpt.c icns.c
+				install.c launch_efi.c launch_legacy.c lib.c line_edit.c
+				linux.c log.c main.c menu.c mystrings.c pointer.c scan.c screen.c
 			]
-			include : [ ]
+			include : [ libeg mok ]
 		}
-		FS : { basedir : ../filesystems
+		FS : { basedir : filesystems
 			src : [
 				fsw_core.c
 				fsw_efi.c
 				fsw_efi_lib.c
 				fsw_lib.c
 				fsw_ext4.c
+				fsw_ext2.c
 				fsw_ntfs.c
 			]
-			include : [ . ]
-		}
-		MAIN : {
-			basedir : ..
-			src : [ main.c ]
+			include : [ ]
 		}
 	}
 
