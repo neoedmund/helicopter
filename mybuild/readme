@@ -2,4 +2,8 @@ replacing makefile
 
 build with nbc2 and textfrog
 
+first things first
+I need to compile xxx.efi using my self builder.
+but the xxx.efi is not loaded , just dead without messages
+so, need another try...
 
